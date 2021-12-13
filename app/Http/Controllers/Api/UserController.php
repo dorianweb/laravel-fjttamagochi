@@ -23,69 +23,80 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $status = 200;
-        $request->validate([
-            'pseudo' => 'required',
-        ]);
+        try {
+            $status = 200;
+            $request->validate([
+                'pseudo' => 'required|string|unique:\App\Models\User,pseudo',
+            ]);
 
-        if (User::where(['pseudo' => $request->pseudo])->get()->count() <= 0) {
-            $iduser = User::insertGetId([
-                "pseudo" => $request->input('pseudo'),
-                "nb_attack" => 0,
-                "nb_hp" => 0,
-                "nb_accuracy" => 0,
-                "nb_amnesia" => 0,
-                "nb_red" => 0,
-                "nb_green" => 0,
-                "nb_blue" => 0,
-                "nb_black" => 0,
-            ]);
-            $idtamagochi = Tamagochi::insertGetId([
-                "nb_attack" => 0,
-                "nb_hp" => 0,
-                "nb_accuracy" => 0,
-                "nb_amnesia" => 0,
-                "nb_red" => 0,
-                "nb_green" => 0,
-                "nb_blue" => 0,
-                "nb_black" => 0,
-                "user_id" => $iduser
-            ]);
-            $resp = [
-                "created" => true,
-                "id" => $iduser,
-            ];
-        } else {
+            if (User::where(['pseudo' => $request->pseudo])->get()->count() <= 0) {
+                $iduser = User::insertGetId([
+                    "pseudo" => $request->input('pseudo'),
+                    "nb_attack" => 0,
+                    "nb_hp" => 0,
+                    "nb_accuracy" => 0,
+                    "nb_amnesia" => 0,
+                    "nb_red" => 0,
+                    "nb_green" => 0,
+                    "nb_blue" => 0,
+                    "nb_black" => 0,
+                ]);
+                $idtamagochi = Tamagochi::insertGetId([
+                    "nb_attack" => 0,
+                    "nb_hp" => 0,
+                    "nb_accuracy" => 0,
+                    "nb_amnesia" => 0,
+                    "nb_red" => 0,
+                    "nb_green" => 0,
+                    "nb_blue" => 0,
+                    "nb_black" => 0,
+                    "user_id" => $iduser
+                ]);
+                $resp = [
+                    "created" => true,
+                    "data" => User::where(['pseudo' => $request->input('pseudo')])->first(),
+                ];
+            } else {
+                $resp = [
+                    "created" => false,
+                    "message" => "pseudo is already taken by someone",
+                ];
+                $status = 404;
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+
             $resp = [
                 "created" => false,
-                "message" => "pseudo is already taken by someone",
+                "message" => $e,
             ];
             $status = 404;
         }
+
         return response($resp, $status);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param string $name
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($name)
     {
-        return User::with("tamagochi")->findOrFail($id);
+
+        return User::where(['pseudo' => "darksauceUk"])->with('tamagochi')->first();
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -137,7 +148,7 @@ class UserController extends Controller
             $code = 200;
         } catch (ValidationException $e) {
             $result['updated'] = false;
-            $result['errors']  = $e->err;
+            $result['errors'] = $e->err;
             $code = 404;
         }
 
@@ -147,12 +158,12 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param string $pseudo
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($pseudo)
     {
-        $user = $this->show($id);
-        $user->destroy();
+        $user = $this->show($pseudo);
+        return response(['user' => $user], 200);
     }
 }
