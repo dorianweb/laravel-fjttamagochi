@@ -89,7 +89,7 @@ class UserController extends Controller
     public function show($name)
     {
 
-        return User::where(['pseudo' => "darksauceUk"])->with('tamagochi')->first();
+        return User::where(['pseudo' => $name])->with('tamagochi')->first();
     }
 
     /**
