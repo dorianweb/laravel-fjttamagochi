@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\TamagotchiController;
 use App\Http\Controllers\Api\UserController;
-use App\Models\Tamagochi;
+use App\Models\Tamagotchi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,5 +19,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::apiResource('users', UserController::class);
-    Route::apiResource('tamagochis', Tamagochi::class);
+    Route::apiResource('tamagotchis', TamagotchiController::class);
 });

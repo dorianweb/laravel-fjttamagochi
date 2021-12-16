@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTamagochisTable extends Migration
+class CreateTamagotchisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,18 @@ class CreateTamagochisTable extends Migration
      */
     public function up()
     {
-        Schema::create('tamagochis', function (Blueprint $table) {
+        Schema::create('tamagotchis', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->integer("nb_attack");
-            $table->integer("nb_hp");
-            $table->integer("nb_accuracy");
-            $table->integer("nb_amnesia");
-            $table->integer("nb_red");
-            $table->integer("nb_green");
-            $table->integer("nb_blue");
-            $table->integer("nb_black");
+            $table->integer("hp");
+            $table->integer("attack");
+            $table->integer("accuracy");
+            $table->integer("red");
+            $table->integer("green");
+            $table->integer("blue");
+            $table->integer("max");
             $table->unsignedBigInteger("user_id");
             $table->foreign('user_id')->references('id')->on('users');
-
-            $table->timestamps();
         });
     }
 
@@ -38,6 +35,6 @@ class CreateTamagochisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tamagochis');
+        Schema::dropIfExists('tamagotchis');
     }
 }

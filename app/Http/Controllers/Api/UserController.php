@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Tamagochi;
+use App\Models\Tamagotchi;
 use App\Models\User;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Http\Request;
@@ -45,21 +45,22 @@ class UserController extends Controller
                     "nb_green" => 0,
                     "nb_blue" => 0,
                     "nb_black" => 0,
+                    "currency" => 0,
                 ]);
-                $idtamagochi = Tamagochi::insertGetId([
-                    "nb_attack" => 0,
-                    "nb_hp" => 0,
-                    "nb_accuracy" => 0,
-                    "nb_amnesia" => 0,
-                    "nb_red" => 0,
-                    "nb_green" => 0,
-                    "nb_blue" => 0,
-                    "nb_black" => 0,
-                    "user_id" => $iduser
+                $idtamagotchi = Tamagotchi::insertGetId([
+                    "attack" => 5,
+                    "hp" => 20,
+                    "accuracy" => 20,
+                    "red" => 0,
+                    "green" => 0,
+                    "blue" => 0,
+                    "max" => 30,
+                    "user_id" => $iduser,
+
                 ]);
                 $resp = [
                     "created" => true,
-                    "data" => User::where(['pseudo' => $request->input('pseudo')])->first(),
+                    "data" => User::where(['pseudo' => $request->input('pseudo')])->with("tamagotchi")->first(),
                 ];
             } else {
                 $resp = [
@@ -89,7 +90,7 @@ class UserController extends Controller
     public function show($name)
     {
         $result = [];
-        $user = User::where(['pseudo' => $name])->with('tamagochi')->first();
+        $user = User::where(['pseudo' => $name])->with('tamagotchi')->first();
 
         if (!empty($user)) {
             $result['data'] = $user;
@@ -122,17 +123,17 @@ class UserController extends Controller
                 "nb_blue" => "required|integer",
                 "nb_black" => "required|integer",
 
-                "tamagochi.nb_attack" => "required|integer",
-                "tamagochi.nb_hp" => "required|integer",
-                "tamagochi.nb_accuracy" => "required|integer",
-                "tamagochi.nb_amnesia" => "required|integer",
-                "tamagochi.nb_red" => "required|integer",
-                "tamagochi.nb_green" => "required|integer",
-                "tamagochi.nb_blue" => "required|integer",
-                "tamagochi.nb_black" => "required|integer",
+                "tamagotchi.nb_attack" => "required|integer",
+                "tamagotchi.nb_hp" => "required|integer",
+                "tamagotchi.nb_accuracy" => "required|integer",
+                "tamagotchi.nb_amnesia" => "required|integer",
+                "tamagotchi.nb_red" => "required|integer",
+                "tamagotchi.nb_green" => "required|integer",
+                "tamagotchi.nb_blue" => "required|integer",
+                "tamagotchi.nb_black" => "required|integer",
 
             ]);
-            $user = User::with("tamagochi")->findOrFail($id);
+            $user = User::with("tamagotchi")->findOrFail($id);
             $user->pseudo = $request->input("pseudo");
             $user->nb_attack = $request->input("nb_attack");
             $user->nb_hp = $request->input("nb_hp");
@@ -142,16 +143,16 @@ class UserController extends Controller
             $user->nb_blue = $request->input("nb_blue");
             $user->nb_black = $request->input("nb_black");
             $user->nb_amnesia = $request->input("nb_amnesia");
-            $user->tamagochi->nb_attack = $request->input("tamagochi.nb_attack");
-            $user->tamagochi->nb_hp = $request->input("tamagochi.nb_hp");
-            $user->tamagochi->nb_accuracy = $request->input("tamagochi.nb_accuracy");
-            $user->tamagochi->nb_amnesia = $request->input("tamagochi.nb_amnesia");
-            $user->tamagochi->nb_red = $request->input("tamagochi.nb_red");
-            $user->tamagochi->nb_green = $request->input("tamagochi.nb_green");
-            $user->tamagochi->nb_blue = $request->input("tamagochi.nb_blue");
-            $user->tamagochi->nb_black = $request->input("tamagochi.nb_black");
+            $user->tamagotchi->nb_attack = $request->input("tamagotchi.nb_attack");
+            $user->tamagotchi->nb_hp = $request->input("tamagotchi.nb_hp");
+            $user->tamagotchi->nb_accuracy = $request->input("tamagotchi.nb_accuracy");
+            $user->tamagotchi->nb_amnesia = $request->input("tamagotchi.nb_amnesia");
+            $user->tamagotchi->nb_red = $request->input("tamagotchi.nb_red");
+            $user->tamagotchi->nb_green = $request->input("tamagotchi.nb_green");
+            $user->tamagotchi->nb_blue = $request->input("tamagotchi.nb_blue");
+            $user->tamagotchi->nb_black = $request->input("tamagotchi.nb_black");
             $user->save();
-            $user->tamagochi->save();
+            $user->tamagotchi->save();
 
             $result["updated"] = true;
             $code = 200;

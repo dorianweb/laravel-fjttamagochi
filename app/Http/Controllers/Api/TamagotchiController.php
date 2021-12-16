@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Tamagochi;
+use App\Models\Tamagotchi;
 use Illuminate\Http\Request;
 
-class TamagochiController extends Controller
+class TamagotchiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class TamagochiController extends Controller
      */
     public function index()
     {
-        return Tamagochi::all();
+        return Tamagotchi::all();
     }
 
     /**
@@ -37,7 +37,7 @@ class TamagochiController extends Controller
      */
     public function show($id)
     {
-        return Tamagochi::findOrFail($id);
+        return Tamagotchi::findOrFail($id);
     }
 
     /**
@@ -60,8 +60,8 @@ class TamagochiController extends Controller
      */
     public function destroy($id)
     {
-        $tamagochi = Tamagochi::findOrFail($id);
-        $isDeleted = $tamagochi->delete();
+        $tamagotchi = Tamagotchi::findOrFail($id);
+        $isDeleted = $tamagotchi->delete();
         return  response(['deleted' => $isDeleted], $isDeleted ? 200 : 404);
     }
 }

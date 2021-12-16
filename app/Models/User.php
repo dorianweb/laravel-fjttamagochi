@@ -39,8 +39,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    function tamagochi()
+    function tamagotchi()
     {
-        return $this->hasOne(Tamagochi::class);
+        return $this->hasOne(Tamagotchi::class);
     }
 }

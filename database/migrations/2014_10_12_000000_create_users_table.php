@@ -25,7 +25,8 @@ class CreateUsersTable extends Migration
             $table->integer("nb_green");
             $table->integer("nb_blue");
             $table->integer("nb_black");
-            $table->dateTime("last_loot")->nullable()->default(now());
+            $table->integer("currency");
+            $table->dateTime("next_loot")->nullable()->default(now());
             $table->timestamps();
         });
     }
