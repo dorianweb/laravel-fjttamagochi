@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        return response(['data' => User::all()], 200);
     }
 
     /**
@@ -88,8 +88,17 @@ class UserController extends Controller
      */
     public function show($name)
     {
+        $result = [];
+        $user = User::where(['pseudo' => $name])->with('tamagochi')->first();
 
-        return User::where(['pseudo' => $name])->with('tamagochi')->first();
+        if (!empty($user)) {
+            $result['data'] = $user;
+            $code = 200;
+        } else {
+            $result['find'] = false;
+            $code = 404;
+        }
+        return response($result, $code);
     }
 
     /**
