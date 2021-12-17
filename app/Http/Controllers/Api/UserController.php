@@ -122,15 +122,14 @@ class UserController extends Controller
                 "nb_green" => "required|integer",
                 "nb_blue" => "required|integer",
                 "nb_black" => "required|integer",
-
-                "tamagotchi.nb_attack" => "required|integer",
-                "tamagotchi.nb_hp" => "required|integer",
-                "tamagotchi.nb_accuracy" => "required|integer",
-                "tamagotchi.nb_amnesia" => "required|integer",
-                "tamagotchi.nb_red" => "required|integer",
-                "tamagotchi.nb_green" => "required|integer",
-                "tamagotchi.nb_blue" => "required|integer",
-                "tamagotchi.nb_black" => "required|integer",
+                "currency" => "required|integer",
+                "next_loot" => "required | date",
+                "tamagotchi.attack" => "required|integer",
+                "tamagotchi.hp" => "required|integer",
+                "tamagotchi.accuracy" => "required|integer",
+                "tamagotchi.red" => "required|integer",
+                "tamagotchi.green" => "required|integer",
+                "tamagotchi.blue" => "required|integer",
 
             ]);
             $user = User::with("tamagotchi")->findOrFail($id);
@@ -143,14 +142,15 @@ class UserController extends Controller
             $user->nb_blue = $request->input("nb_blue");
             $user->nb_black = $request->input("nb_black");
             $user->nb_amnesia = $request->input("nb_amnesia");
-            $user->tamagotchi->nb_attack = $request->input("tamagotchi.nb_attack");
-            $user->tamagotchi->nb_hp = $request->input("tamagotchi.nb_hp");
-            $user->tamagotchi->nb_accuracy = $request->input("tamagotchi.nb_accuracy");
-            $user->tamagotchi->nb_amnesia = $request->input("tamagotchi.nb_amnesia");
-            $user->tamagotchi->nb_red = $request->input("tamagotchi.nb_red");
-            $user->tamagotchi->nb_green = $request->input("tamagotchi.nb_green");
-            $user->tamagotchi->nb_blue = $request->input("tamagotchi.nb_blue");
-            $user->tamagotchi->nb_black = $request->input("tamagotchi.nb_black");
+            $user->currency = $request->input("currency");
+            $user->next_loot = ($request->input("next_loot"));
+
+            $user->tamagotchi->attack = $request->input("tamagotchi.attack");
+            $user->tamagotchi->hp = $request->input("tamagotchi.hp");
+            $user->tamagotchi->accuracy = $request->input("tamagotchi.accuracy");
+            $user->tamagotchi->red = $request->input("tamagotchi.red");
+            $user->tamagotchi->green = $request->input("tamagotchi.green");
+            $user->tamagotchi->blue = $request->input("tamagotchi.blue");
             $user->save();
             $user->tamagotchi->save();
 
